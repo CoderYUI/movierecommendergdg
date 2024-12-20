@@ -4,6 +4,7 @@ from flask_cors import CORS
 import pickle
 import requests
 import pandas as pd
+import os 
 
 with open('sentence_transformer_model.pkl', 'rb') as file:
     model = pickle.load(file)
@@ -11,13 +12,16 @@ with open('sentence_transformer_model.pkl', 'rb') as file:
 with open('movie_embeddings.pkl', 'rb') as file:
     movies_embeddings = pickle.load(file)
 
-
 movies = pd.read_csv('movies.csv')
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/')
+def home():
+    return "API is working"
+
+@app.route('/api/recommend', methods=['POST'])
 def recommend():
     data = request.get_json()
     query = data['query']
@@ -43,4 +47,4 @@ def recommend():
     return omdb_responses
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))

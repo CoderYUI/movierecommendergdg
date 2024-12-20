@@ -42,7 +42,7 @@ export default function App() {
         // Show success toast
         toast.success('Item added to the cart.');
 
-        const response = await fetch('http://127.0.0.1:5000/recommend', {
+        const response = await fetch('/api/recommend', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -53,6 +53,7 @@ export default function App() {
           }),
         });
 
+        
         if (!response.ok) {
           throw new Error('Failed to fetch recommendations.');
         }
