@@ -7,6 +7,7 @@ import Hero from "./components/Hero";
 import MovieList from "./components/MovieList";
 import toast from 'react-hot-toast'; // For displaying notification toasts
 import CartItems from "./components/CartItems";
+import RecommendedItems from "./components/RecommendItems";
 import { BrowserRouter, Routes, Route } from "react-router"; // For handling routing
 
 export default function App() {
@@ -41,6 +42,23 @@ export default function App() {
         // Show success toast
         toast.success('Item added to the cart.');
 
+        const response = await fetch('http://127.0.0.1:5000/recommend', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: movie.name,
+            top_n: 5,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch recommendations.');
+        }
+        const recommendMovies = await response.json();
+        setRecMovies(recommendMovies); // Add this line to update the state
+        console.log("Recommendations:", recommendMovies);  
       } catch (error) {
         // Log and show error if recommendation fetch fails
         console.error('Error while fetching recommendations:', error);
